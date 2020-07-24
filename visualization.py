@@ -1,11 +1,12 @@
 import pygame
 import sys
+import random
 
 
 class Settings:
     # Canvas settings
     WIDTH = 1000
-    HEIGHT = 500
+    HEIGHT = 600
     ROWS = 40
 
     # Colors
@@ -22,7 +23,16 @@ class Bar:
         self.width = Settings.WIDTH // Settings.ROWS
 
     def draw(self, surface):
-        pass
+        x = self.row * self.width + 1
+        y = Settings.HEIGHT - self.height + 1
+        pygame.draw.rect(
+            surface,
+            self.color,
+            (x,
+             y,
+             self.width - 2,
+             self.height - 2))
+
 
 class Button:
     def __init__(self, color, pos, size, text='', outline_color=None):
@@ -34,26 +44,34 @@ class Button:
 
     def draw(self, surface):
         if self.outline_color:
-            pygame.draw.rect(surface, self.outline_color, 
-            (self.x-2,self.y-2,self.width+4,self.height+4),0)
-        
-        pygame.draw.rect(surface, self.color, 
-        (self.x,self.y,self.width,self.height),0)
+            pygame.draw.rect(
+                surface,
+                self.outline_color,
+                (self.x - 2,
+                 self.y - 2,
+                 self.width + 4,
+                 self.height + 4),
+                0)
+
+        pygame.draw.rect(surface, self.color,
+                         (self.x, self.y, self.width, self.height), 0)
 
         if self.text != '':
             font = pygame.font.SysFont('comicsans', 30)
             text = font.render(self.text, 1, Settings.WHITE)
 
-            surface.blit(text, (self.x + (self.width//2 - text.get_width()//2), 
-            self.y + (self.height//2 - text.get_height()//2)))
+            surface.blit(text,
+                         (self.x + (self.width // 2 - text.get_width() // 2),
+                          self.y + (self.height // 2 - text.get_height() // 2)))
 
     def isOver(self, pos):
-        #Pos is the mouse position or a tuple of (x,y) coordinates
+        # Pos is the mouse position or a tuple of (x,y) coordinates
         if pos[0] > self.x and pos[0] < self.x + self.width:
             if pos[1] > self.y and pos[1] < self.y + self.height:
                 return True
-            
+
         return False
+
 
 class Visualization:
     def __init__(self):
@@ -63,12 +81,14 @@ class Visualization:
         self.height = Settings.HEIGHT
         self.rows = Settings.ROWS
         self.screen = pygame.display.set_mode((self.width, self.height))
-    
-    def draw_menu(self, surface):
-        self.buttons = {'quickSort':Button(Settings.PINK, (0, 0), (125, 50), 'Quick Sort')}
+        self.buttons = {
+            'quickSort': Button(
+                Settings.PINK, (0, 0), (125, 50), 'Quick Sort')}
+        self.bars = self.create_bars()
 
-        for btn in buttons:
-            buttons[btn].draw(surface)
+    def draw_menu(self, surface):
+        for btn in self.buttons:
+            self.buttons[btn].draw(surface)
 
     def draw_grid(self, surface):
         sizeBtwn = self.width // self.rows
@@ -80,8 +100,24 @@ class Visualization:
             x = x + sizeBtwn
             y = y + sizeBtwn
 
+            # Vertical
             pygame.draw.line(surface, Settings.WHITE, (x, 0), (x, self.width))
-            pygame.draw.line(surface, Settings.WHITE, (0, y), (self.width, y))
+
+            # Horizontal
+            # pygame.draw.line(surface, Settings.WHITE, (0, y), (self.width, y))
+    @staticmethod
+    def create_bars():
+        bars = []
+        for i in range(Settings.ROWS):
+            bars.append(Bar(random.randrange(1, 500), i, Settings.PINK))
+        return bars
+
+    def update_bars(self):
+        self.bars = self.create_bars()
+
+    def draw_bars(self, surface):
+        for bar in self.bars:
+            bar.draw(surface)
 
     @staticmethod
     def update():
@@ -94,9 +130,10 @@ class Visualization:
         self.screen.fill(Settings.BLACK)
         self.draw_grid(self.screen)
         self.draw_menu(self.screen)
+        self.draw_bars(self.screen)
 
 
-def control():
+def control(buttons, vis):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -106,9 +143,14 @@ def control():
         if event.type == pygame.MOUSEBUTTONDOWN:
 
             if event.button == 1:  # Left
-                print('left')
                 x, y = pygame.mouse.get_pos()
-                print(x, y)
+
+                if buttons['quickSort'].isOver((x, y)):
+                    print('quick')
+                    vis.update_bars()
+
+                else:
+                    print('left')
 
             elif event.button == 3:  # Right
                 print('right')
@@ -125,10 +167,11 @@ def main():
     vis = Visualization()
     clock = pygame.time.Clock()
     vis.redraw_window()
+    buttons = vis.buttons
     while run:
         clock.tick(30)
         vis.redraw_window()
-        control()
+        control(buttons, vis)
         vis.update()
 
 
