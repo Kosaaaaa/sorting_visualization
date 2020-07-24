@@ -11,6 +11,7 @@ class Settings:
     # Colors
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
+    PINK = (255, 0, 153)
 
 
 class Bar:
@@ -23,6 +24,36 @@ class Bar:
     def draw(self, surface):
         pass
 
+class Button:
+    def __init__(self, color, pos, size, text='', outline_color=None):
+        self.color = color
+        self.x, self.y = pos
+        self.width, self.height = size
+        self.text = text
+        self.outline_color = outline_color
+
+    def draw(self, surface):
+        if self.outline_color:
+            pygame.draw.rect(surface, self.outline_color, 
+            (self.x-2,self.y-2,self.width+4,self.height+4),0)
+        
+        pygame.draw.rect(surface, self.color, 
+        (self.x,self.y,self.width,self.height),0)
+
+        if self.text != '':
+            font = pygame.font.SysFont('comicsans', 30)
+            text = font.render(self.text, 1, Settings.WHITE)
+
+            surface.blit(text, (self.x + (self.width//2 - text.get_width()//2), 
+            self.y + (self.height//2 - text.get_height()//2)))
+
+    def isOver(self, pos):
+        #Pos is the mouse position or a tuple of (x,y) coordinates
+        if pos[0] > self.x and pos[0] < self.x + self.width:
+            if pos[1] > self.y and pos[1] < self.y + self.height:
+                return True
+            
+        return False
 
 class Visualization:
     def __init__(self):
@@ -31,7 +62,13 @@ class Visualization:
         self.width = Settings.WIDTH
         self.height = Settings.HEIGHT
         self.rows = Settings.ROWS
-        self.screen = pygame.display.set_mode((self.width, self.width))
+        self.screen = pygame.display.set_mode((self.width, self.height))
+    
+    def draw_menu(self, surface):
+        self.buttons = {'quickSort':Button(Settings.PINK, (0, 0), (125, 50), 'Quick Sort')}
+
+        for btn in buttons:
+            buttons[btn].draw(surface)
 
     def draw_grid(self, surface):
         sizeBtwn = self.width // self.rows
@@ -56,6 +93,7 @@ class Visualization:
     def redraw_window(self):
         self.screen.fill(Settings.BLACK)
         self.draw_grid(self.screen)
+        self.draw_menu(self.screen)
 
 
 def control():
