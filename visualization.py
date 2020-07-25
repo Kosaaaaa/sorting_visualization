@@ -1,7 +1,7 @@
 import pygame
 import sys
 import random
-
+import sorting
 
 class Settings:
     # Canvas settings
@@ -112,8 +112,11 @@ class Visualization:
             bars.append(Bar(random.randrange(1, 500), i, Settings.PINK))
         return bars
 
-    def update_bars(self):
-        self.bars = self.create_bars()
+    def update_bars(self, bars=None):
+        if bars == None:
+            self.bars = self.create_bars()
+        else:
+            self.bars = bars
 
     def draw_bars(self, surface):
         for bar in self.bars:
@@ -132,6 +135,11 @@ class Visualization:
         self.draw_menu(self.screen)
         self.draw_bars(self.screen)
 
+def do_quick_sort(bars):
+    sorting.quickSort(bars, 0, len(bars)-1)
+    for i in range(len(bars)):
+        bars[i].row = i
+    return bars
 
 def control(buttons, vis):
     for event in pygame.event.get():
@@ -147,7 +155,8 @@ def control(buttons, vis):
 
                 if buttons['quickSort'].isOver((x, y)):
                     print('quick')
-                    vis.update_bars()
+                    vis.update_bars(bars=do_quick_sort(vis.bars))
+
 
                 else:
                     print('left')

@@ -1,12 +1,12 @@
 def partition(arr, low, high):
     i = (low - 1)         # index of smaller element
-    pivot = arr[high]     # pivot
+    pivot = arr[high].height     # pivot
 
     for j in range(low, high):
 
         # If current element is smaller than or
         # equal to pivot
-        if arr[j] <= pivot:
+        if arr[j].height <= pivot:
 
             # increment index of smaller element
             i = i + 1
