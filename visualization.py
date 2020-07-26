@@ -96,6 +96,8 @@ class Visualization:
                 Settings.RED, (0, 0), (125, 50), 'Reset'),
             'quickSort': Button(
                 Settings.PINK, (125, 0), (125, 50), 'Quick Sort'),
+            'mergeSort': Button(
+                Settings.PINK, (250, 0), (125, 50), 'Merge Sort'),
         }
         self.bars = self.create_bars()
         self.sorted = False
@@ -160,12 +162,19 @@ class Visualization:
             sorting.quickSort(self.bars, 0, len(self.bars) - 1, self)
             self.start = False
             self.sorted = True
+            return True
         else:
-            return
-        # for i in range(len(bars)):
-        #     bars[i].row = i
+            return False
 
-        # return bars
+    def do_merge_sort(self):
+        if not self.start and not self.sorted:
+            self.start = True
+            sorting.mergeSort(self.bars, self)
+            self.start = False
+            self.sorted = True
+            return True
+        else:
+            return False
 
 
 def control(buttons, vis):
@@ -189,6 +198,12 @@ def control(buttons, vis):
                     print('reset')
                     vis.reset_bars()
                     buttons['reset'].reset_color()
+
+                elif buttons['mergeSort'].isOver((x, y)):
+                    print('mergeSort')
+                    vis.do_merge_sort()
+                    buttons['mergeSort'].reset_color()
+
                 else:
                     print('left')
 
