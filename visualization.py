@@ -3,6 +3,7 @@ import sys
 import random
 import sorting
 
+
 class Settings:
     # Canvas settings
     WIDTH = 1000
@@ -13,9 +14,10 @@ class Settings:
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
     PINK = (255, 0, 153)
-    GRAY = (192,192,192)
+    GRAY = (192, 192, 192)
     RED = (255, 0, 0)
     GREEN = (0, 255, 0)
+
 
 class Bar:
     def __init__(self, height, row, color):
@@ -23,6 +25,7 @@ class Bar:
         self.row = row
         self.color = color
         self.width = Settings.WIDTH // Settings.ROWS
+
     def draw(self, surface):
         x = self.row * self.width + 1
         y = Settings.HEIGHT - self.height + 1
@@ -43,6 +46,7 @@ class Button:
         self.text = text
         self.outline_color = outline_color
         self.clicked_color = Settings.GRAY
+
     def draw(self, surface):
         if self.outline_color:
             pygame.draw.rect(
@@ -77,6 +81,7 @@ class Button:
     def reset_color(self):
         self.color, self.clicked_color = self.clicked_color, self.color
 
+
 class Visualization:
     def __init__(self):
         pygame.init()
@@ -90,10 +95,11 @@ class Visualization:
             'reset': Button(
                 Settings.RED, (0, 0), (125, 50), 'Reset'),
             'quickSort': Button(
-                Settings.PINK, (125, 0), (125, 50), 'Quick Sort'),    
+                Settings.PINK, (125, 0), (125, 50), 'Quick Sort'),
         }
         self.bars = self.create_bars()
         self.sorted = False
+
     def draw_menu(self, surface):
         for btn in self.buttons:
             self.buttons[btn].draw(surface)
@@ -121,7 +127,7 @@ class Visualization:
         return bars
 
     def update_bars(self, bars=None):
-        if bars == None:
+        if bars is None:
             self.bars = self.create_bars()
         else:
             self.bars = bars
@@ -151,7 +157,7 @@ class Visualization:
     def do_quick_sort(self):
         if not self.start and not self.sorted:
             self.start = True
-            sorting.quickSort(self.bars, 0, len(self.bars)-1, self)
+            sorting.quickSort(self.bars, 0, len(self.bars) - 1, self)
             self.start = False
             self.sorted = True
         else:
@@ -160,6 +166,7 @@ class Visualization:
         #     bars[i].row = i
 
         # return bars
+
 
 def control(buttons, vis):
     for event in pygame.event.get():
@@ -178,8 +185,7 @@ def control(buttons, vis):
                     vis.do_quick_sort()
                     buttons['quickSort'].reset_color()
 
-                    
-                elif buttons['reset'].isOver((x,y)):
+                elif buttons['reset'].isOver((x, y)):
                     print('reset')
                     vis.reset_bars()
                     buttons['reset'].reset_color()

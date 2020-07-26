@@ -1,33 +1,35 @@
 from visualization import Settings
 import pygame
+
+
 def compare_bars(bar1, bar2):
     bar1.color = Settings.GREEN
     bar2.color = Settings.GREEN
     if bar1.height <= bar2.height:
         return True
     return False
+
+
 def reset_color(bar1, bar2):
     bar1.color = Settings.PINK
     bar2.color = Settings.PINK
+
+
 def partition(arr, low, high, vis):
     i = (low - 1)         # index of smaller element
 
     for j in range(low, high):
 
-        # If current element is smaller than or
-        # equal to pivot
-        # if arr[j].height <= arr[high].height:
         bar1 = arr[j]
         bar2 = arr[high]
+        # If current element is smaller than or equal to pivot
         if compare_bars(arr[j], arr[high]):
-        
+
             # increment index of smaller element
             i = i + 1
             arr[i], arr[j] = arr[j], arr[i]
             arr[i].row, arr[j].row = arr[j].row, arr[i].row
-        
-        
-        
+
         vis.redraw_window()
         vis.update()
         reset_color(bar1, bar2)
