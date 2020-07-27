@@ -1,20 +1,18 @@
 import pygame
-
-GREEN = (0, 255, 0)
-PINK = (255, 0, 153)
+from settings import Settings
 
 
 def compare_bars(bar1, bar2):
-    bar1.color = GREEN
-    bar2.color = GREEN
+    bar1.color = Settings.GREEN
+    bar2.color = Settings.GREEN
     if bar1.height <= bar2.height:
         return True
     return False
 
 
 def reset_color(bar1, bar2):
-    bar1.color = PINK
-    bar2.color = PINK
+    bar1.color = Settings.PINK
+    bar2.color = Settings.PINK
 
 
 def partition(arr, low, high, vis):
