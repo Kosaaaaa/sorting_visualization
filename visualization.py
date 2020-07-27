@@ -163,7 +163,7 @@ class Visualization:
             return True
         else:
             return False
-    
+
     def do_select_sort(self):
         if not self.start and not self.sorted:
             self.start = True
@@ -173,7 +173,7 @@ class Visualization:
             return True
         else:
             return False
-    
+
     def test_sort(self):
         self.bars.sort(key=lambda x: x.row)
         last = 0
@@ -183,6 +183,7 @@ class Visualization:
                 last = bar.height
             except AssertionError:
                 print('Bars are not sorted')
+
 
 def control(buttons, vis):
     for event in pygame.event.get():
