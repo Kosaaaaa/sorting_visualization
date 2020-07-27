@@ -1,6 +1,6 @@
 import pygame
 from settings import Settings
-
+import random
 
 def compare_bars(bar1, bar2):
     bar1.color = Settings.GREEN
@@ -36,9 +36,9 @@ def partition(arr, low, high, vis):
         pygame.time.delay(50)
         vis.redraw_window()
         vis.update()
-    arr[i + 1], arr[high] = arr[high], arr[i + 1]
     arr[i + 1].row, arr[high].row = arr[high].row, arr[i + 1].row
-
+    arr[i + 1], arr[high] = arr[high], arr[i + 1]
+   
     return (i + 1)
 
 
@@ -76,17 +76,17 @@ def merge(left, right, vis):
         bar2 = right[rightIndex]
 
         if compare_bars(left[leftIndex], right[rightIndex]):
-            result.append(left[leftIndex])
             left[leftIndex].row = resultIndex
+            result.append(left[leftIndex])
             leftIndex += 1
         else:
-            result.append(right[rightIndex])
             right[rightIndex].row = resultIndex
+            result.append(right[rightIndex])
             rightIndex += 1
         resultIndex += 1
         vis.redraw_window()
         vis.update()
-        pygame.time.delay(50)
+        pygame.time.delay(Settings.SPEED)
         reset_color(bar1, bar2)
 
     for el in left[leftIndex:] + right[rightIndex:]:
@@ -94,7 +94,7 @@ def merge(left, right, vis):
         resultIndex += 1
         vis.redraw_window()
         vis.update()
-        pygame.time.delay(50)
+        pygame.time.delay(Settings.SPEED)
         reset_color(bar1, bar2)
     return result + left[leftIndex:] + right[rightIndex:]
 
@@ -116,3 +116,40 @@ def mergeSort(arr, vis):
     right = arr[mid:]
 
     return merge(mergeSort(left, vis), mergeSort(right, vis), vis)
+
+'''
+The main function that implements Select Sort
+
+Parameters:
+arr (list): List to be sorted
+vis (Object): Visualization class object
+
+returns: sorted list
+'''
+def selectSort(arr, vis):
+    if len(arr) <= 1:
+        return arr
+    
+    for i in range(len(arr)):
+        minIndex = i
+        
+        for j in range(i+1,len(arr)):
+            bar1 = arr[minIndex]
+            bar2 = arr[j]
+            if compare_bars(arr[j], arr[minIndex]):
+                minIndex = j
+            vis.redraw_window()
+            vis.update()
+            pygame.time.delay(Settings.SPEED)
+            reset_color(bar1, bar2)
+            vis.redraw_window()
+            vis.update()
+        
+        
+
+
+        arr[i].row, arr[minIndex].row = arr[minIndex].row, arr[i].row
+        arr[i], arr[minIndex] = arr[minIndex], arr[i]
+        vis.redraw_window()
+        vis.update()
+        

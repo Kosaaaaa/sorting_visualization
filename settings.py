@@ -11,3 +11,6 @@ class Settings:
     GRAY = (192, 192, 192)
     RED = (255, 0, 0)
     GREEN = (0, 255, 0)
+
+    # Delay for sorting
+    SPEED = 50

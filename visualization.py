@@ -84,6 +84,8 @@ class Visualization:
                 Settings.PINK, (125, 0), (125, 50), 'Quick Sort'),
             'mergeSort': Button(
                 Settings.PINK, (250, 0), (125, 50), 'Merge Sort'),
+            'selectSort': Button(
+                Settings.PINK, (375, 0), (125, 50), 'Select Sort'),
         }
         self.bars = self.create_bars()
         self.sorted = False
@@ -155,57 +157,74 @@ class Visualization:
     def do_merge_sort(self):
         if not self.start and not self.sorted:
             self.start = True
-            sorting.mergeSort(self.bars, self)
+            self.bars = sorting.mergeSort(self.bars, self)
             self.start = False
             self.sorted = True
             return True
         else:
             return False
-
+    
+    def do_select_sort(self):
+        if not self.start and not self.sorted:
+            self.start = True
+            sorting.selectSort(self.bars, self)
+            self.start = False
+            self.sorted = True
+            return True
+        else:
+            return False
+    
     def test_sort(self):
         self.bars.sort(key=lambda x: x.row)
         last = 0
         for bar in self.bars:
-            assert bar.height >= last
-            last = bar.height
-            print(bar.height, bar.row)
+            try:
+                assert bar.height >= last
+                last = bar.height
+            except AssertionError:
+                print('Bars are not sorted')
 
 def control(buttons, vis):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        # keys = pygame.key.get_pressed()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
 
             if event.button == 1:  # Left
                 x, y = pygame.mouse.get_pos()
 
-                if buttons['quickSort'].isOver((x, y)):
-                    print('quick')
-                    vis.do_quick_sort()
-                    buttons['quickSort'].reset_color()
-
-                elif buttons['reset'].isOver((x, y)):
+                if buttons['reset'].isOver((x, y)):
                     print('reset')
                     vis.reset_bars()
                     buttons['reset'].reset_color()
+
+                elif buttons['quickSort'].isOver((x, y)):
+                    print('quick')
+                    vis.do_quick_sort()
+                    buttons['quickSort'].reset_color()
 
                 elif buttons['mergeSort'].isOver((x, y)):
                     print('mergeSort')
                     vis.do_merge_sort()
                     buttons['mergeSort'].reset_color()
-                else:
-                    print('left')
 
-            elif event.button == 3:  # Right
-                print('right')
+                elif buttons['selectSort'].isOver((x, y)):
+                    print('selectSort')
+                    vis.do_select_sort()
+                    buttons['selectSort'].reset_color()
+
+                # else:
+                #     print('left')
+
+            # elif event.button == 3:  # Right
+            #     print('right')
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                print('space')
                 print('start test')
                 vis.test_sort()
+                print('start test')
 
 
 def main():
