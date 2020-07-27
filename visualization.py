@@ -2,21 +2,7 @@ import pygame
 import sys
 import random
 import sorting
-
-
-class Settings:
-    # Canvas settings
-    WIDTH = 1000
-    HEIGHT = 600
-    ROWS = 40
-
-    # Colors
-    WHITE = (255, 255, 255)
-    BLACK = (0, 0, 0)
-    PINK = (255, 0, 153)
-    GRAY = (192, 192, 192)
-    RED = (255, 0, 0)
-    GREEN = (0, 255, 0)
+from settings import Settings
 
 
 class Bar:
@@ -176,13 +162,20 @@ class Visualization:
         else:
             return False
 
+    def test_sort(self):
+        self.bars.sort(key=lambda x: x.row)
+        last = 0
+        for bar in self.bars:
+            assert bar.height >= last
+            last = bar.height
+            print(bar.height, bar.row)
 
 def control(buttons, vis):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        keys = pygame.key.get_pressed()
+        # keys = pygame.key.get_pressed()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
 
@@ -203,17 +196,16 @@ def control(buttons, vis):
                     print('mergeSort')
                     vis.do_merge_sort()
                     buttons['mergeSort'].reset_color()
-
                 else:
                     print('left')
 
             elif event.button == 3:  # Right
                 print('right')
-
-        for key in keys:
-            if keys[pygame.K_SPACE]:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
                 print('space')
-                print('start algo')
+                print('start test')
+                vis.test_sort()
 
 
 def main():
